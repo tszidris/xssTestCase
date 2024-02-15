@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>XSS TEST CASE</title>
+  </head>
+
+  <body>
+
+    <h1>1.zafiyet</h1>
+    <p>URL'deki fragment identifier'ını (hash) alır ve sayfaya ekler. Doğru kod yazılmazsa kodumuzda xss zafiyeti bulunur.</p>
+
+  <h2>Welcome!</h2>
+  <p id="welcomeMessage"></p>
+
+  <script>
+  
+    var fragment = window.location.hash.substring(1); 
+    document.getElementById("welcomeMessage").innerHTML = fragment; 
+
+  </script>
+
+
+
+    <hr>
+
+    <h1>2.zafiyet</h1>
+
+    <h2>Login Sayfası</h2>
+
+
+    Ad <br>
+    <input type="text" id="reflectedInput1"> <br>   
+    Soyad <br>
+    <input type="text" id="reflectedInput1">
+    <br>
+    <button onclick="displayInput1()">Giriş Yap</button>
+    
+    <script>
+      function displayInput1() {
+        var userInput = document.getElementById('reflectedInput1').value;
+        document.write("<p>Hoş geldiniz " + userInput + "</p>");
+      }
+    </script>
+
+    <hr>
+
+    <h1>3.zafiyet</h1>
+   
+    
+    
+    <p>Aramak İstediğiniz Kitabı Girin</p>
+    SEARCH
+    <input type="text" id="reflectedInput">
+    <button onclick="displayInput()">ARA</button>
+    
+    <script>
+      function displayInput() {
+        var userInput = document.getElementById('reflectedInput').value;
+        document.write("<p>You entered: " + userInput + "</p>");
+      }
+    </script>
+
+    <hr>
+
+    <h1>4.zafiyet</h1>
+   
+    <h2>Yorumlar</h2>
+    <form action="#" method="POST" id="commentForm">
+      <label for="name">İsim:</label><br>
+      <input type="text" id="name" name="name"><br>
+      <label for="comment">Yorum:</label><br>
+      <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="commentsTable"></div>
+    <script>
+    document.getElementById('commentForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var name = document.getElementById('name').value;
+        var comment = document.getElementById('comment').value;
+        var commentTable = document.getElementById('commentsTable');
+        commentTable.innerHTML += "<table><tr><th>Name</th><th>Comment</th></tr><tr><td>" + name + "</td><td>" + comment + "</td></tr></table>"; // Reflected XSS here
+      });
+      </script>
+    <hr>
+
+    <h1>5.zafiyet</h1>
+
+    <h2>Makale Alanı</h2>
+    <form action="#" method="POST" id="contentForm">
+
+      <input type="text" id="m" placeholder="Başlık">
+      <br>
+      <textarea id="content" placeholder="İçerik" rows="4" cols="50"></textarea>
+      <button type="submit">Ekle</button>
+    </form>
+    <div id="contentTable"></div>
+    <script>
+      document.getElementById('contentForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var baslik = document.getElementById('m').value;
+        var content = document.getElementById('content').value;
+        var contentTable = document.getElementById('contentTable');
+        contentTable.innerHTML += "<table><tr><th>Name</th><th>Comment</th></tr><tr><td>" + baslik + "</td><td>" + content + "</td></tr></table>"; // Reflected XSS here
+      });
+    </script>
+
+   
+
+  </body>
+
+</html>
